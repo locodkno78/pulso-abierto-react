@@ -1,11 +1,21 @@
 import { Link, useParams } from 'react-router-dom'
 import { initialCryptos } from '../data/cryptos'
+import { useFavoritesStore } from '../store/favoritesStore'
+import { formatCurrency } from '../utils/formatCurrency'
 
 function CryptoDetailPage() {
   const { id } = useParams()
 
   const crypto = initialCryptos.find(
     (item) => item.id === id,
+  )
+
+  const isFavorite = useFavoritesStore((state) =>
+    crypto ? state.favoriteIds.includes(crypto.id) : false,
+  )
+
+  const toggleFavorite = useFavoritesStore(
+    (state) => state.toggleFavorite,
   )
 
   if (!crypto) {
@@ -48,16 +58,22 @@ function CryptoDetailPage() {
 
         <p>
           <strong>Precio:</strong>{' '}
-          {new Intl.NumberFormat('es-AR', {
-            style: 'currency',
-            currency: 'USD',
-          }).format(crypto.price)}
+          {formatCurrency(crypto.price, 'usd')}
         </p>
 
         <p>
           <strong>Favorita:</strong>{' '}
-          {crypto.isFavorite ? 'Sí' : 'No'}
+          {isFavorite ? 'Sí' : 'No'}
         </p>
+
+        <button
+          type="button"
+          className="secondary-button"
+          onClick={() => toggleFavorite(crypto.id)}
+          aria-pressed={isFavorite}
+        >
+          {isFavorite ? '★ Quitar de favoritos' : '☆ Agregar a favoritos'}
+        </button>
 
         <Link to="/" className="secondary-button">
           Volver a cotizaciones

@@ -1,18 +1,14 @@
+
 import type { Crypto } from '../types/crypto'
 import CryptoCard from './CryptoCard'
 import type { Currency } from '../types/api'
 
 interface CryptoListProps {
   cryptos: Crypto[]
-  onToggleFavorite: (id: string) => void
   currency: Currency
 }
 
-function CryptoList({
-  cryptos,
-  onToggleFavorite,
-  currency,
-}: CryptoListProps) {
+function CryptoList({ cryptos, currency }: CryptoListProps) {
   if (cryptos.length === 0) {
     return (
       <p className="empty-message">
@@ -28,7 +24,6 @@ function CryptoList({
           key={crypto.id}
           crypto={crypto}
           currency={currency}
-          onToggleFavorite={onToggleFavorite}
         />
       ))}
     </div>

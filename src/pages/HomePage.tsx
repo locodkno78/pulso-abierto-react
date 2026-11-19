@@ -3,6 +3,7 @@ import QueryControls from '../components/QueryControls'
 import StatusMessage from '../components/StatusMessage'
 import CryptoList from '../components/CryptoList'
 import { fetchCryptos } from '../services/cryptoService'
+import { useFavoritesStore } from '../store/favoritesStore'
 import type { Crypto } from '../types/crypto'
 import type { Currency } from '../types/api'
 
@@ -12,6 +13,10 @@ function HomePage() {
   const [submittedSearch, setSubmittedSearch] = useState('')
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>('usd')
   const [onlyFavorites, setOnlyFavorites] = useState(false)
+
+  const favoriteIds = useFavoritesStore(
+    (state) => state.favoriteIds,
+  )
 
   const [status, setStatus] = useState<
     'initial' | 'loading' | 'success' | 'empty' | 'error'
@@ -33,15 +38,7 @@ function HomePage() {
           controller.signal,
         )
 
-        setCryptos((previousCryptos) =>
-          result.map((crypto) => ({
-            ...crypto,
-            isFavorite:
-              previousCryptos.find((previous) => previous.id === crypto.id)
-                ?.isFavorite ?? false,
-          })),
-        )
-
+        setCryptos(result)
         setStatus(result.length > 0 ? 'success' : 'empty')
       } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {
@@ -74,22 +71,13 @@ function HomePage() {
     setRequestKey((previous) => previous + 1)
   }
 
-  const handleToggleFavorite = (id: string) => {
-    setCryptos((previousCryptos) =>
-      previousCryptos.map((crypto) =>
-        crypto.id === id
-          ? { ...crypto, isFavorite: !crypto.isFavorite }
-          : crypto,
-      ),
-    )
-  }
-
   const filteredCryptos = cryptos.filter((crypto) => {
     const matchesSearch = crypto.name
       .toLowerCase()
       .includes(submittedSearch.toLowerCase())
 
-    const matchesFavorites = !onlyFavorites || crypto.isFavorite
+    const matchesFavorites =
+      !onlyFavorites || favoriteIds.includes(crypto.id)
 
     return matchesSearch && matchesFavorites
   })
@@ -126,7 +114,6 @@ function HomePage() {
           <CryptoList
             cryptos={filteredCryptos}
             currency={selectedCurrency}
-            onToggleFavorite={handleToggleFavorite}
           />
         )}
       </section>

@@ -1,18 +1,23 @@
 import { Link } from 'react-router-dom'
 import type { Crypto } from '../types/crypto'
 import type { Currency } from '../types/api'
+import { useFavoritesStore } from '../store/favoritesStore'
+import { formatCurrency } from '../utils/formatCurrency'
 
 interface CryptoCardProps {
   crypto: Crypto
-  onToggleFavorite: (id: string) => void
   currency: Currency
 }
 
-function CryptoCard({
-  crypto,
-  onToggleFavorite,
-  currency,
-}: CryptoCardProps) {
+function CryptoCard({ crypto, currency }: CryptoCardProps) {
+  const isFavorite = useFavoritesStore((state) =>
+    state.favoriteIds.includes(crypto.id),
+  )
+
+  const toggleFavorite = useFavoritesStore(
+    (state) => state.toggleFavorite,
+  )
+
   return (
     <article className="crypto-card">
       <div className="crypto-card-header">
@@ -31,10 +36,7 @@ function CryptoCard({
       <p className="crypto-price-label">Precio actual</p>
 
       <p className="crypto-price">
-        {new Intl.NumberFormat('es-AR', {
-          style: 'currency',
-          currency: currency.toUpperCase(),
-        }).format(crypto.price)}
+        {formatCurrency(crypto.price, currency)}
       </p>
 
       <div className="card-actions">
@@ -48,10 +50,10 @@ function CryptoCard({
         <button
           type="button"
           className="secondary-button"
-          onClick={() => onToggleFavorite(crypto.id)}
-          aria-pressed={crypto.isFavorite}
+          onClick={() => toggleFavorite(crypto.id)}
+          aria-pressed={isFavorite}
         >
-          {crypto.isFavorite ? '★ Favorita' : '☆ Marcar favorita'}
+          {isFavorite ? '★ Favorita' : '☆ Marcar favorita'}
         </button>
       </div>
     </article>
