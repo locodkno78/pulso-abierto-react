@@ -42,6 +42,7 @@ function CryptoCard({ crypto, currency }: CryptoCardProps) {
       <div className="card-actions">
         <Link
           to={`/criptomonedas/${crypto.id}`}
+          state={{ currency }}
           className="secondary-button"
         >
           Ver detalles
