@@ -58,7 +58,7 @@ function CryptoDetailPage() {
 
         <p>
           <strong>Precio:</strong>{' '}
-          {formatCurrency(crypto.price, 'usd')}
+          {formatCurrency(crypto.price, 'ars')}
         </p>
 
         <p>

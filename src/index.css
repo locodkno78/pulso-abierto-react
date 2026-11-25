@@ -161,6 +161,158 @@ h2 {
   gap: 20px;
 }
 
+.crypto-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.crypto-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.crypto-name {
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+
+.crypto-ticker {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.crypto-price-label {
+  margin: 24px 0 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.crypto-price {
+  margin: 0 0 24px;
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 700;
+}
+
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.query-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--navy);
+  padding: 10px 12px;
+}
+
+.checkbox-label {
+  min-height: 44px;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  width: 18px;
+  min-height: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--teal);
+}
+
+.primary-button,
+.secondary-button,
+button:not([class]) {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.primary-button {
+  border: 1px solid var(--teal);
+  background: var(--teal);
+  color: white;
+}
+
+.primary-button:hover {
+  border-color: #06685d;
+  background: #06685d;
+}
+
+.secondary-button {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--navy);
+}
+
+button:not([class]) {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--navy);
+}
+
+.secondary-button:hover,
+button:not([class]):hover {
+  border-color: var(--teal);
+  background: #edf8f6;
+  color: #06685d;
+}
+
+.primary-button:active,
+.secondary-button:active,
+button:not([class]):active {
+  transform: translateY(1px);
+}
+
+.secondary-button[aria-pressed="true"] {
+  border-color: var(--teal);
+  background: #edf8f6;
+  color: #06685d;
+}
+
 .empty-message {
   grid-column: 1 / -1;
   color: var(--muted);
@@ -173,6 +325,10 @@ h2 {
 
 @media (max-width: 760px) {
   .crypto-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .query-controls {
     grid-template-columns: 1fr;
   }
 

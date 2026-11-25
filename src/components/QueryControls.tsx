@@ -76,7 +76,7 @@ function QueryControls({
   }
 
   return (
-    <form className="query-panel" onSubmit={handleSubmit} noValidate>
+    <form className="query-panel query-controls" onSubmit={handleSubmit} noValidate>
       <div className="form-group">
         <label htmlFor="crypto-search">
           Buscar criptomoneda
