@@ -1,66 +1,14 @@
-import { useEffect, useState } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { initialCryptos } from '../data/cryptos'
-import { fetchCryptos } from '../services/cryptoService'
 import { useFavoritesStore } from '../store/favoritesStore'
 import { formatCurrency } from '../utils/formatCurrency'
-import type { Currency } from '../types/api'
-import type { Crypto } from '../types/crypto'
 
 function CryptoDetailPage() {
   const { id } = useParams()
-  const location = useLocation()
-  const locationCurrency = (
-    location.state as { currency?: Currency } | null
-  )?.currency
-  const currency: Currency =
-    locationCurrency === 'eur' || locationCurrency === 'ars'
-      ? locationCurrency
-      : 'usd'
 
-  const [crypto, setCrypto] = useState<Crypto | null>(() =>
-    initialCryptos.find((item) => item.id === id) ?? null,
+  const crypto = initialCryptos.find(
+    (item) => item.id === id,
   )
-  const [loading, setLoading] = useState(true)
-  const [errorMessage, setErrorMessage] = useState('')
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    async function loadCrypto() {
-      setLoading(true)
-      setErrorMessage('')
-
-      try {
-        const cryptos = await fetchCryptos(currency, controller.signal)
-        const currentCrypto = cryptos.find((item) => item.id === id)
-
-        if (currentCrypto) {
-          setCrypto(currentCrypto)
-        }
-      } catch (error) {
-        if (error instanceof Error && error.name === 'AbortError') {
-          return
-        }
-
-        setErrorMessage(
-          error instanceof Error
-            ? error.message
-            : 'No se pudo obtener la cotización actual.',
-        )
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    loadCrypto()
-
-    return () => {
-      controller.abort()
-    }
-  }, [currency, id])
 
   const isFavorite = useFavoritesStore((state) =>
     crypto ? state.favoriteIds.includes(crypto.id) : false,
@@ -110,16 +58,8 @@ function CryptoDetailPage() {
 
         <p>
           <strong>Precio:</strong>{' '}
-          {loading
-            ? 'Consultando cotización actual...'
-            : formatCurrency(crypto.price, currency)}
+          {formatCurrency(crypto.price, 'ars')}
         </p>
-
-        {errorMessage && (
-          <p role="alert" className="field-error">
-            {errorMessage}
-          </p>
-        )}
 
         <p>
           <strong>Favorita:</strong>{' '}
